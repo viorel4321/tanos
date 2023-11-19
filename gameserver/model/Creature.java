@@ -1102,7 +1102,6 @@ public abstract class Creature extends GameObject
 
 		int skillTime = skill.isSkillTimePermanent() ? skill.getHitTime() : Formulas.calcMAtkSpd(this, skill, skill.getHitTime());
 		int skillInterruptTime = skill.isMagic() ? Formulas.calcMAtkSpd(this, skill, skill.getSkillInterruptTime()) : 0;
-
 		int minCastTime = Math.min(Config.SKILLS_CAST_TIME_MIN, skill.getHitTime());
 		if(skillTime < minCastTime)
 		{
@@ -1117,7 +1116,6 @@ public abstract class Creature extends GameObject
 		}
 
 		_animationEndTime = System.currentTimeMillis() + skillTime;
-
 		Formulas.calcSkillMastery(skill, this);
 
 		final long reuseDelay = Math.max(0L, Formulas.calcSkillReuseDelay(this, skill));
@@ -1138,7 +1136,6 @@ public abstract class Creature extends GameObject
 			else
 				sendPacket(new SystemMessage(SystemMessage.USE_S1).addItemName(Integer.valueOf(skill.getItemConsumeId()[0])));
 		}
-
 		if(skill.getTargetType() == Skill.SkillTargetType.TARGET_HOLY)
 			target.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, this, 1);
 
@@ -1153,7 +1150,6 @@ public abstract class Creature extends GameObject
 			}
 			reduceCurrentMp(mpConsume1, null);
 		}
-
 		final boolean forceBuff = skill.getSkillType() == Skill.SkillType.FORCE_BUFF;
 		if(forceBuff)
 		{
@@ -1179,12 +1175,10 @@ public abstract class Creature extends GameObject
 					broadcastPacket(new FlyToLocation(this, flyLoc, skill.getFlyType()));
 					break;
 				}
-				System.out.println("ataka 5");
 				sendPacket(Msg.CANNOT_SEE_TARGET);
 				return;
 			}
 		}
-
 		_castingSkill = skill;
 		_castInterruptTime = System.currentTimeMillis() + skillInterruptTime + Config.CAST_INTERRUPT_TIME_ADD;
 
@@ -1198,7 +1192,6 @@ public abstract class Creature extends GameObject
 			sendPacket(new SetupGauge(0, skillTime));
 
 		useTriggers(target, TriggerType.ON_START_CAST, null, skill, 0);
-
 		if(checks && getPlayer().recording && !ArrayUtils.contains(Config.BOTS_RT_SKILLS, skill.getId()))
 		{
 			if(target == this)
@@ -1208,10 +1201,9 @@ public abstract class Creature extends GameObject
 			else
 				getPlayer().recBot(1, target.getX(), target.getY(), target.getZ(), skill.getCastRange(), 1, 0);
 		}
-
-		if(!skill.isUsingWhileCasting())
+		if(!skill.isUsingWhileCasting()) {
 			_skillLaunchedTask = ThreadPoolManager.getInstance().schedule(new GameObjectTasks.MagicLaunchedTask(this, forceUse), skillInterruptTime);
-
+		}
 		_skillTask = ThreadPoolManager.getInstance().schedule(new GameObjectTasks.MagicUseTask(this, forceUse), skillTime);
 
 		if(Config.NEXT_CAST_CHECK && this != target && !skill.isUsingWhileCasting() && skill.getCastRange() > 0 && skill.getCastRange() != 32767 && skill.getSkillType() != Skill.SkillType.TAKECASTLE)
@@ -2104,7 +2096,6 @@ public abstract class Creature extends GameObject
 
 			if(Math.abs(getZ() - target.getZ()) > 1000 && !isFlying())
 			{
-				System.out.println("ataka 6");
 				sendPacket(Msg.CANNOT_SEE_TARGET);
 				return false;
 			}
@@ -4343,7 +4334,6 @@ public abstract class Creature extends GameObject
 				{
 					if(Math.abs(getZ() - loc.z) > 1000 && !isFlying())
 					{
-						System.out.println("ataka 7");
 						sendPacket(Msg.CANNOT_SEE_TARGET);
 						stopMove();
 						return;

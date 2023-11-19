@@ -46,8 +46,9 @@ public class ValidatePosition extends L2GameClientPacket
 		{
 			if(Config.VALID_TELEPORT)
 				player.teleToClosestTown();
-			else
+			else {
 				correctPosition(player);
+			}
 			return;
 		}
 		final Vehicle boat = player.getVehicle();
@@ -67,24 +68,44 @@ public class ValidatePosition extends L2GameClientPacket
 			player.setLastServerPosition(null);
 			return;
 		}
+		Location locatia;
 		final double diff = player.getDistance(_loc.x, _loc.y);
 		final int dz = Math.abs(_loc.z - player.getZ());
+// Метод исправляет провалы, переопредиляет позицию в сервере по позиции клиента
+//		if (dz > 100){
+//			player.sendMessage("Corecting Z " );
+//			player.setXYZ(_loc.x,_loc.y, _loc.getZ());
+//			locatia = new Location(_loc.x,_loc.y, _loc.getZ());
+//			player.setLoc(locatia);
+//			System.out.println("loc.z start:" + _loc.z);
+//			if (player.isGM())
+//			{
+//				player.sendMessage("Corected Z " );
+//			}
+//		}
 		if(dz >= (player.isFlying() ? 1024 : 512))
 		{
-			if(player.getIncorrectValidateCount() >= 3 || Config.VALID_TELEPORT)
+			if(player.getIncorrectValidateCount() >= 3 || Config.VALID_TELEPORT) {
 				player.teleToClosestTown();
+			}
 			else
 			{
-				player.teleToLocation(player.getLoc(), player.getReflectionId());
+
+				if(!player.isInWater()) {
+					correctPosition(player); // фиекс провалов| skype: viorel4321
+				}
+				player.teleToLocation(player.getLoc());
 				player.setIncorrectValidateCount(player.getIncorrectValidateCount() + 1);
 			}
 		}
-		else if(dz >= 256)
+		else if(dz >= 256) {
 			player.validateLocation(0);
+		}
 		else if(_loc.z < -15000 || _loc.z > 15000)
 		{
-			if(player.getIncorrectValidateCount() >= 3 || Config.VALID_TELEPORT)
+			if(player.getIncorrectValidateCount() >= 3 || Config.VALID_TELEPORT) {
 				player.teleToClosestTown();
+			}
 			else
 			{
 				correctPosition(player);
@@ -93,20 +114,24 @@ public class ValidatePosition extends L2GameClientPacket
 		}
 		else if(diff > 1024.0)
 		{
-			if(player.getIncorrectValidateCount() >= 3 || Config.VALID_TELEPORT)
+			if(player.getIncorrectValidateCount() >= 3 || Config.VALID_TELEPORT) {
 				player.teleToClosestTown();
+			}
 			else
 			{
 				player.teleToLocation(player.getLoc(), player.getReflectionId());
 				player.setIncorrectValidateCount(player.getIncorrectValidateCount() + 1);
 			}
 		}
-		else if(diff > 512.0)
+		else if(diff > 512.0) {
 			player.validateLocation(1);
-		else
+		}
+		else {
 			player.setIncorrectValidateCount(0);
-		player.setLastClientPosition(_loc.setH(player.getHeading()));
-		player.setLastServerPosition(player.getLoc());
+
+			player.setLastClientPosition(_loc.setH(player.getHeading()));
+			player.setLastServerPosition(player.getLoc());
+		}
 	}
 
 	private void correctPosition(final Player player)

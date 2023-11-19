@@ -188,9 +188,10 @@ public abstract class Playable extends Creature
 		}
 		if(target.isInvisible() || getReflectionId() != target.getReflectionId() || !GeoEngine.canSeeTarget(this, target))
 		{
-			System.out.println("ataka 8");
-			player.sendPacket(Msg.CANNOT_SEE_TARGET);
-			return false;
+			if (!target.isDoor()) {
+				player.sendPacket(Msg.CANNOT_SEE_TARGET);
+				return false;
+			}
 		}
 		if(Config.CHECK_EPIC_CAN_DAMAGE && player.isInZone(Zone.ZoneType.epic) != target.isInZone(Zone.ZoneType.epic))
 		{
@@ -549,7 +550,7 @@ public abstract class Playable extends Creature
 			}
 			else
 			{
-				setCurrentHp(Math.max(1.0, getMaxHp() * Config.RESPAWN_RESTORE_HP), true);
+				setCurrentHp(Math.max(1.0, getMaxHp() * Config.RESPAWN_RESTORE_HP), false);
 				if(Config.RESPAWN_RESTORE_MP >= 0.0)
 					setCurrentMp(getMaxMp() * Config.RESPAWN_RESTORE_MP);
 				if(isPlayer() && Config.RESPAWN_RESTORE_CP >= 0.0)

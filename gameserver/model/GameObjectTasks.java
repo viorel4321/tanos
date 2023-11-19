@@ -546,8 +546,12 @@ public class GameObjectTasks
 			}
 			else if(!GeoEngine.canSeeTarget(character, target))
 			{
-				character.sendPacket(new SystemMessage(181));
-				abort = true;
+				if (character.getDistance(target) > character.getMagicalAttackRange(character.getCastingSkill())) {
+					if(!target.isDoor()) {
+						character.sendPacket(new SystemMessage(181));
+						abort = true;
+					}
+				}
 			}
 			if(abort)
 				character.abortCast(true, false);

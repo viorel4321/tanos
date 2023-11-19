@@ -365,7 +365,7 @@ public class Spawn implements Cloneable
 		if(respawnDelay < 0)
 			Spawn._log.warn("respawn delay is negative for npcId: " + getNpcId());
 		_respawnDelay = respawnDelay >= 5 ? respawnDelay : 30;
-		_respawnDelayRandom = respawnDelayRandom > 0 ? respawnDelayRandom : 0;
+		_respawnDelayRandom = Math.max(respawnDelayRandom, 0);
 	}
 
 	public void setRespawnDelay(final int respawnDelay)

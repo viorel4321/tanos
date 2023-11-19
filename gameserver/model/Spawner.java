@@ -69,7 +69,9 @@ public abstract class Spawner extends EventOwner implements Cloneable
 
 	public int getRespawnDelayWithRnd()
 	{
-		return _respawnDelayRandom == 0 ? _respawnDelay : Rnd.get(_respawnDelay - _respawnDelayRandom, _respawnDelay);
+
+//		return _respawnDelayRandom == 0 ? _respawnDelay : Rnd.get(_respawnDelay - _respawnDelayRandom, _respawnDelay);
+	return _respawnDelayRandom = Rnd.get(_respawnDelay - _respawnDelayRandom, _respawnDelay);
 	}
 
 	public SchedulingPattern getRespawnPattern()
@@ -252,8 +254,8 @@ public abstract class Spawner extends EventOwner implements Cloneable
 			respawnTime = (int) (getRespawnPattern().next(deathTime) / 1000);
 		else
 		{
-			long delay = (long) (/*isRaid ? Config.ALT_RAID_RESPAWN_MULTIPLIER : */1.) * getRespawnDelayWithRnd() * 1000L;
-			respawnTime = (int) ((deathTime + delay) / 1000);
+			long delay = /*isRaid ? Config.ALT_RAID_RESPAWN_MULTIPLIER : */ getRespawnDelayWithRnd() * 1000L;
+			respawnTime = (int) ((System.currentTimeMillis() + delay) / 1000); //in loc de deathtime am scris current time
 		}
 		return respawnTime;
 	}

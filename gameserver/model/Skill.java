@@ -1008,7 +1008,6 @@ public abstract class Skill extends StatTemplate implements SkillInfo
 		if(target != null && activeChar.getReflectionId() != target.getReflectionId())
 		{
 			if(sendMsg) {
-				System.out.println("ataka 9");
 				activeChar.sendPacket(Msg.CANNOT_SEE_TARGET);
 			}
 			return false;
@@ -1172,7 +1171,6 @@ public abstract class Skill extends StatTemplate implements SkillInfo
 		if(target == null || isOffensive() && (target == activeChar || Config.NO_DAMAGE_NPC && activeChar.isPlayable() && target.isNpc() && !target.isDmg()))
 			return Msg.TARGET_IS_INCORRECT;
 		if(activeChar.getReflectionId() != target.getReflectionId()) {
-			System.out.println("ataka 10");
 			return Msg.CANNOT_SEE_TARGET;
 		}
 		if(!trigger) // TODO: Логично, но не вылазят ли косяки?
@@ -1241,7 +1239,6 @@ public abstract class Skill extends StatTemplate implements SkillInfo
 					if(player.getTeam() > 0 && player.isChecksForTeam() && pcTarget.getTeam() > 0 && pcTarget.isChecksForTeam() && player.getTeam() == pcTarget.getTeam() && player != pcTarget)
 						return Msg.TARGET_IS_INCORRECT;
 					if(isAoE() && getCastRange() != 32767 && !GeoEngine.canSeeTarget(activeChar, target)) {
-						System.out.println("ataka 11");
 						return Msg.CANNOT_SEE_TARGET;
 					}
 					if(activeChar.isInZonePeace() || target.isInZonePeace())
@@ -1315,7 +1312,6 @@ public abstract class Skill extends StatTemplate implements SkillInfo
 		if(!trigger || target != aimingTarget) // TODO: Логично, но не вылазят ли косяки?
 		{
 			if (isAoE() && isOffensive() && getCastRange() != 32767 && !GeoEngine.canSeeTarget(activeChar, target)) {
-				System.out.println("ataka 12");
 				return Msg.CANNOT_SEE_TARGET;
 			}
 		}
